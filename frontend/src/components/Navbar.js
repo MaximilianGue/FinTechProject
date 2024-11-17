@@ -7,17 +7,20 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-logo">
-        <Link to="/">MyApp</Link>
+        <Link to="/">MarketCircle</Link>
       </div>
       <ul className="navbar-links">
         <li>
-          <Link to="/">Home</Link>
+          <Link to="/">Dashboard</Link>
         </li>
         <li>
-          <Link to="/login">Login</Link>
+          <Link to="/explore">Explore</Link>
         </li>
         <li>
-          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/friends">Friends</Link>
+        </li>
+        <li> {/* has to change based on if loged in */}
+          <Link to="/profile">Profile</Link> 
         </li>
       </ul>
     </nav>
