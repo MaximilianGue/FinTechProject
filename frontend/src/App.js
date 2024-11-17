@@ -1,31 +1,25 @@
-// Old (React Router v5)
-// import { Switch, Route } from 'react-router-dom';
-
 // New (React Router v6+)
-import { Routes, Route } from 'react-router-dom';
 import React from 'react';
-import './App.css'; // if you have any styles
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Home from './pages/Home';  // Correct the path if components are in a different directory
+import './App.css'; // Import styles if available
+
+import Home from './pages/Home';       // Correct the path if components are in a different directory
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-
-<Routes>
-  <Route path="/" element={<Home />} />
-  <Route path="/login" element={<Login />} />
-  <Route path="/dashboard" element={<Dashboard />} />
-  {/* Add more routes as needed */}
-</Routes>
-
-
+import Navbar from './components/Navbar'; // Make sure Navbar exists and is properly imported
 
 function App() {
   return (
-    <div>
-      <h1>Welcome to My App</h1>
-      {/* Add other components here */}
-    </div>
+    <Router>
+      <Navbar /> {/* Renders the navigation bar at the top */}
+      <Routes>
+        <Route path="/" element={<Home />} /> {/* Home route */}
+        <Route path="/login" element={<Login />} /> {/* Login route */}
+        <Route path="/dashboard" element={<Dashboard />} /> {/* Dashboard route */}
+      </Routes>
+    </Router>
   );
 }
 
-export default App;  // This is the default export
+export default App; // This is the default export for the App component
