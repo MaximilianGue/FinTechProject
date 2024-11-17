@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+// Old (React Router v5)
+// import { Switch, Route } from 'react-router-dom';
+
+// New (React Router v6+)
+import { Routes, Route } from 'react-router-dom';
+import React from 'react';
+import './App.css'; // if you have any styles
+
+import Home from './pages/Home';  // Correct the path if components are in a different directory
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+
+<Routes>
+  <Route path="/" element={<Home />} />
+  <Route path="/login" element={<Login />} />
+  <Route path="/dashboard" element={<Dashboard />} />
+  {/* Add more routes as needed */}
+</Routes>
+
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Welcome to My App</h1>
+      {/* Add other components here */}
     </div>
   );
 }
 
-export default App;
+export default App;  // This is the default export
