@@ -14,40 +14,34 @@ ChartJS.register(
 );
 
 const Explore = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('AAPL'); // Default symbol (e.g., Apple)
   const [timeframe, setTimeframe] = useState('1d'); // Default timeframe is '1d'
   const [stockData, setStockData] = useState(null);
   const [error, setError] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleTimeframeChange = (newTimeframe) => {
-    setTimeframe(newTimeframe);
-  };
-
-  const handleSearch = async () => {
+  // Fetch stock data from the backend
+  const handleSearch = async (currentTimeframe) => {
+    const activeTimeframe = currentTimeframe || timeframe; // Use passed timeframe or the current one
+    if (searchTerm.trim() === '') return; // Do nothing if search term is empty
+    setIsLoading(true);
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/stock?search_term=${searchTerm}&period=${timeframe}`);
-      console.log("Response data:", response.data);
+      const response = await axios.get(`http://127.0.0.1:5000/stock?search_term=${searchTerm}&period=${activeTimeframe}`);
       setStockData(response.data);
       setError('');
     } catch (err) {
       console.error(err);
       setError('Error fetching data');
       setStockData(null);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleAutocomplete = async (e) => {
-    setSearchTerm(e.target.value);
-    if (e.target.value.length > 2) { // Trigger autocomplete after 3 characters
-      try {
-        const response = await axios.get(`http://127.0.0.1:5000/autocomplete?search_term=${e.target.value}`);
-        setSuggestions(response.data);
-      } catch (err) {
-        console.error(err);
-        setSuggestions([]);
-      }
-    }
+  // Handle timeframe change and trigger search
+  const handleTimeframeChange = (newTimeframe) => {
+    setTimeframe(newTimeframe); // Update the timeframe immediately
+    handleSearch(newTimeframe); // Trigger search immediately with the new timeframe
   };
 
   const chartData = stockData && stockData.dates && stockData.dates.length > 0 && stockData.prices && stockData.prices.length > 0 && {
@@ -70,20 +64,11 @@ const Explore = () => {
         type="text"
         placeholder="Search by company name or ticker symbol"
         value={searchTerm}
-        onChange={handleAutocomplete}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        onBlur={() => handleSearch()} // Trigger search when the input loses focus
       />
-      <button onClick={handleSearch}>Search</button>
 
-      {suggestions.length > 0 && (
-        <ul>
-          {suggestions.map((suggestion) => (
-            <li key={suggestion.symbol} onClick={() => setSearchTerm(suggestion.symbol)}>
-              {suggestion.name} ({suggestion.symbol})
-            </li>
-          ))}
-        </ul>
-      )}
-
+      {/* Timeframe buttons */}
       <div>
         <button onClick={() => handleTimeframeChange('1d')}>1 Day</button>
         <button onClick={() => handleTimeframeChange('1wk')}>1 Week</button>
@@ -91,17 +76,27 @@ const Explore = () => {
         <button onClick={() => handleTimeframeChange('1y')}>1 Year</button>
       </div>
 
+      {isLoading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       {stockData && (
-        <div>
-          <h2>{stockData.symbol}</h2>
-          <p>Price: ${stockData.prices ? stockData.prices[stockData.prices.length - 1] : 'N/A'}</p>
-          <p>Volume: {stockData.volume && stockData.volume.length ? stockData.volume[stockData.volume.length - 1] : 'N/A'}</p>
-          {chartData ? (
-            <Line data={chartData} />
-          ) : (
-            <p>No data available for chart</p>
-          )}
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+          {/* Left side: Chart */}
+          <div style={{ flex: 1, marginRight: '20px' }}>
+            {chartData ? (
+              <Line data={chartData} />
+            ) : (
+              <p>No data available for chart</p>
+            )}
+          </div>
+
+          {/* Right side: Market Data */}
+          <div style={{ flex: 1, maxWidth: '300px' }}>
+            <h2>{stockData.symbol}</h2>
+            <p>Price: ${stockData.prices ? stockData.prices[stockData.prices.length - 1] : 'N/A'}</p>
+            <p>Volume: {stockData.volume && stockData.volume.length ? stockData.volume[stockData.volume.length - 1] : 'N/A'}</p>
+            <h3>Market Data</h3>
+            {/* Add more market data here */}
+          </div>
         </div>
       )}
     </div>
