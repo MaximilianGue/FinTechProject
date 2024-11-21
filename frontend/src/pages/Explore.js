@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import './Explore.css'; // Import the CSS file for styling
 
 ChartJS.register(
   CategoryScale,
@@ -58,30 +59,34 @@ const Explore = () => {
   };
 
   return (
-    <div>
-      <h1>Stock Search</h1>
-      <input
-        type="text"
-        placeholder="Search by company name or ticker symbol"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onBlur={() => handleSearch()} // Trigger search when the input loses focus
-      />
-
-      {/* Timeframe buttons */}
-      <div>
-        <button onClick={() => handleTimeframeChange('1d')}>1 Day</button>
-        <button onClick={() => handleTimeframeChange('1wk')}>1 Week</button>
-        <button onClick={() => handleTimeframeChange('1mo')}>1 Month</button>
-        <button onClick={() => handleTimeframeChange('1y')}>1 Year</button>
+    <div className="container">
+      <h1 className="heading">Stock Search</h1>
+      <div className="search-container">
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search by company name or ticker symbol"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onBlur={() => handleSearch()} // Trigger search when the input loses focus
+        />
       </div>
 
-      {isLoading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
+      {/* Timeframe buttons */}
+      <div className="button-container">
+        <button className="timeframe-button" onClick={() => handleTimeframeChange('1d')}>1 Day</button>
+        <button className="timeframe-button" onClick={() => handleTimeframeChange('1wk')}>1 Week</button>
+        <button className="timeframe-button" onClick={() => handleTimeframeChange('1mo')}>1 Month</button>
+        <button className="timeframe-button" onClick={() => handleTimeframeChange('1y')}>1 Year</button>
+      </div>
+
+      {isLoading && <p className="loading">Loading...</p>}
+      {error && <p className="error">{error}</p>}
+
       {stockData && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+        <div className="content">
           {/* Left side: Chart */}
-          <div style={{ flex: 1, marginRight: '20px' }}>
+          <div className="chart-container">
             {chartData ? (
               <Line data={chartData} />
             ) : (
@@ -90,9 +95,9 @@ const Explore = () => {
           </div>
 
           {/* Right side: Market Data */}
-          <div style={{ flex: 1, maxWidth: '300px' }}>
+          <div className="market-data">
             <h2>{stockData.symbol}</h2>
-            <p>Price: ${stockData.prices ? stockData.prices[stockData.prices.length - 1] : 'N/A'}</p>
+            <p className="price">Price: ${stockData.prices ? stockData.prices[stockData.prices.length - 1] : 'N/A'}</p>
             <p>Volume: {stockData.volume && stockData.volume.length ? stockData.volume[stockData.volume.length - 1] : 'N/A'}</p>
             <h3>Market Data</h3>
             {/* Add more market data here */}
