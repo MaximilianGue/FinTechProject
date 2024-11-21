@@ -7,7 +7,7 @@
 
 body {
   font-family: 'Arial', sans-serif;
-  background-color: #f4f4f9;
+  background-color: #dad7cd; /* Light beige background */
   color: #333;
   padding: 20px;
 }
@@ -21,7 +21,7 @@ body {
   text-align: center;
   font-size: 2.5rem;
   margin-bottom: 20px;
-  color: #333;
+  color: #3a5a40; /* Dark green */
 }
 
 /* Search input field */
@@ -35,14 +35,14 @@ body {
   width: 50%;
   padding: 10px;
   font-size: 1.2rem;
-  border: 2px solid #ccc;
+  border: 2px solid #a3b18a; /* Soft green border */
   border-radius: 4px;
   outline: none;
   transition: border-color 0.3s;
 }
 
 .search-input:focus {
-  border-color: #4CAF50;
+  border-color: #588157; /* Darker green on focus */
 }
 
 /* Timeframe buttons */
@@ -56,7 +56,7 @@ body {
 .timeframe-button {
   padding: 10px 20px;
   font-size: 1.1rem;
-  background-color: #007BFF;
+  background-color: #344e41; /* Deep green background */
   color: white;
   border: none;
   border-radius: 5px;
@@ -65,7 +65,7 @@ body {
 }
 
 .timeframe-button:hover {
-  background-color: #0056b3;
+  background-color: #3a5a40; /* Slightly lighter green on hover */
 }
 
 /* Loading and error messages */
@@ -73,6 +73,7 @@ body {
   text-align: center;
   font-size: 1.2rem;
   margin-top: 20px;
+  color: #3a5a40; /* Dark green */
 }
 
 /* Main content layout */
@@ -107,7 +108,7 @@ body {
 .market-data h2 {
   font-size: 1.5rem;
   margin-bottom: 10px;
-  color: #333;
+  color: #344e41; /* Deep green for headings */
 }
 
 .market-data p {
@@ -118,7 +119,7 @@ body {
 .price {
   font-weight: bold;
   font-size: 1.3rem;
-  color: #2ecc71; /* Green color for price */
+  color: #588157; /* Medium green for price */
 }
 
 /* Media Queries for smaller screens */
@@ -151,32 +152,4 @@ body {
     font-size: 2rem; /* Smaller heading on small devices */
   }
 
-  .search-input {
-    width: 90%; /* Make the input field even wider on very small screens */
-  }
-
-  .timeframe-button {
-    padding: 7px 12px;
-    font-size: 0.9rem; /* Further reduce button size */
-  }
-
-  .market-data h2 {
-    font-size: 1.2rem; /* Adjust heading size for market data */
-  }
-
-  .market-data p {
-    font-size: 1rem; /* Smaller font size for market data on small screens */
-  }
-}
-
-@media screen and (max-width: 320px) {
-  .search-input {
-    width: 100%; /* Full width input on extra small screens */
-  }
-
-  .timeframe-button {
-    width: 100%; /* Make buttons full width on tiny screens */
-    font-size: 0.8rem; /* Small font for buttons */
-    padding: 12px; /* Adjust button padding for small screens */
-  }
 }

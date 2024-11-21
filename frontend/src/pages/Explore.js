@@ -51,9 +51,13 @@ const Explore = () => {
       {
         label: `${stockData.symbol} Stock Price`,
         data: stockData.prices, // Array of prices
-        fill: false,
-        borderColor: 'rgba(75, 192, 192, 1)',
-        tension: 0.1
+        fill: true, // If you want the area under the line to be filled
+        backgroundColor: 'rgba(88, 129, 87, 0.2)', // Light green fill
+        borderColor: '#588157', // Medium green line color
+        borderWidth: 2, // Line thickness
+        tension: 0.1,
+        pointRadius: 0, // Set the point radius to 0 to remove the circles
+        pointHoverRadius: 0, // Ensure no circle on hover as well
       }
     ]
   };
