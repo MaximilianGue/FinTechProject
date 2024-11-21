@@ -18,6 +18,7 @@ const Explore = () => {
   const [timeframe, setTimeframe] = useState('1d'); // Default timeframe is '1d'
   const [stockData, setStockData] = useState(null);
   const [error, setError] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
 
   const handleTimeframeChange = (newTimeframe) => {
     setTimeframe(newTimeframe);
@@ -33,6 +34,19 @@ const Explore = () => {
       console.error(err);
       setError('Error fetching data');
       setStockData(null);
+    }
+  };
+
+  const handleAutocomplete = async (e) => {
+    setSearchTerm(e.target.value);
+    if (e.target.value.length > 2) { // Trigger autocomplete after 3 characters
+      try {
+        const response = await axios.get(`http://127.0.0.1:5000/autocomplete?search_term=${e.target.value}`);
+        setSuggestions(response.data);
+      } catch (err) {
+        console.error(err);
+        setSuggestions([]);
+      }
     }
   };
 
@@ -56,9 +70,19 @@ const Explore = () => {
         type="text"
         placeholder="Search by company name or ticker symbol"
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={handleAutocomplete}
       />
       <button onClick={handleSearch}>Search</button>
+
+      {suggestions.length > 0 && (
+        <ul>
+          {suggestions.map((suggestion) => (
+            <li key={suggestion.symbol} onClick={() => setSearchTerm(suggestion.symbol)}>
+              {suggestion.name} ({suggestion.symbol})
+            </li>
+          ))}
+        </ul>
+      )}
 
       <div>
         <button onClick={() => handleTimeframeChange('1d')}>1 Day</button>
