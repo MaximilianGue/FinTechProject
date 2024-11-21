@@ -19,3 +19,4 @@ export const fetchStockData = async (searchTerm) => {
     throw new Error('An error occurred while fetching the stock data.');
   }
 };
+y 
