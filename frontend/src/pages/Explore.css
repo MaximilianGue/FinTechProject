@@ -153,3 +153,36 @@ body {
   }
 
 }
+.market-data {
+  flex: 1;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 10px 0;
+}
+
+.data-row span:first-child {
+  font-weight: bold;
+  color: #344e41;
+}
+
+.data-row span:last-child {
+  color: #588157;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #588157;
+}

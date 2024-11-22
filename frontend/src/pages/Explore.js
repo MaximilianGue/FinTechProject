@@ -79,7 +79,7 @@ const Explore = () => {
       {/* Timeframe buttons */}
       <div className="button-container">
         <button className="timeframe-button" onClick={() => handleTimeframeChange('1d')}>1 Day</button>
-        <button className="timeframe-button" onClick={() => handleTimeframeChange('1wk')}>1 Week</button>
+        <button className="timeframe-button" onClick={() => handleTimeframeChange('1wk')}>1 week</button> {/* 7 days button */}
         <button className="timeframe-button" onClick={() => handleTimeframeChange('1mo')}>1 Month</button>
         <button className="timeframe-button" onClick={() => handleTimeframeChange('1y')}>1 Year</button>
       </div>
@@ -103,8 +103,36 @@ const Explore = () => {
             <h2>{stockData.symbol}</h2>
             <p className="price">Price: ${stockData.prices ? stockData.prices[stockData.prices.length - 1] : 'N/A'}</p>
             <p>Volume: {stockData.volume && stockData.volume.length ? stockData.volume[stockData.volume.length - 1] : 'N/A'}</p>
+
             <h3>Market Data</h3>
-            {/* Add more market data here */}
+            <div className="data-row">
+              <span>Open:</span>
+              <span>${stockData.market_data.open || 'N/A'}</span>
+            </div>
+            <div className="data-row">
+              <span>High:</span>
+              <span>${stockData.market_data.high || 'N/A'}</span>
+            </div>
+            <div className="data-row">
+              <span>Low:</span>
+              <span>${stockData.market_data.low || 'N/A'}</span>
+            </div>
+            <div className="data-row">
+              <span>Previous Close:</span>
+              <span>${stockData.market_data.previous_close || 'N/A'}</span>
+            </div>
+            <div className="data-row">
+              <span>Market Cap:</span>
+              <span>${stockData.market_data.market_cap || 'N/A'}</span>
+            </div>
+            <div className="data-row">
+              <span>P/E Ratio:</span>
+              <span>{stockData.market_data.pe_ratio || 'N/A'}</span>
+            </div>
+            <div className="data-row">
+              <span>Dividend Yield:</span>
+              <span>{stockData.market_data.dividend_yield ? stockData.market_data.dividend_yield * 100 : 'N/A'}%</span>
+            </div>
           </div>
         </div>
       )}
