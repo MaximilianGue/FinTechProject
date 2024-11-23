@@ -2,15 +2,7 @@ import yfinance as yf
 from flask import Flask, jsonify, request
 import logging
 from flask_cors import CORS
-
-# Manual dictionary mapping company names to ticker symbols
-company_to_ticker = {
-    "Apple": "AAPL",
-    "Google": "GOOGL",
-    "Microsoft": "MSFT",
-    "Tesla": "TSLA",
-    # Add more company-to-ticker mappings here
-}
+import json  # For loading the JSON file
 
 # Initialize the Flask app
 app = Flask(__name__)
@@ -18,6 +10,14 @@ CORS(app)
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
+
+# Load the company-to-ticker mapping from the JSON file
+try:
+    with open('company_to_ticker.json', 'r') as file:
+        company_to_ticker = json.load(file)
+except FileNotFoundError:
+    logging.error("The file 'company_to_ticker.json' was not found.")
+    company_to_ticker = {}
 
 @app.route('/stock', methods=['GET'])
 def get_stock_data():
@@ -28,15 +28,19 @@ def get_stock_data():
         return jsonify({'error': 'No search term provided'}), 400
 
     try:
-        # Check if search_term is a ticker or a company name
-        ticker = search_term
+        # Normalize the search term for case-insensitive matching
+        search_term_lower = search_term.lower()
 
-        if not ticker.isupper() or len(ticker) < 3:  # If it's not a valid ticker symbol
-            # Try to fetch the ticker symbol from the manual mapping
-            ticker = company_to_ticker.get(search_term)
+        # Determine if the search term is a ticker symbol or company name
+        ticker = None
+        if search_term_upper := search_term.upper():  # Check if it's a ticker symbol
+            ticker = search_term_upper if search_term_upper in company_to_ticker.values() else None
+        
+        if not ticker:  # Check if it's a company name
+            ticker = company_to_ticker.get(search_term_lower)
 
         if not ticker:
-            return jsonify({'error': f"Could not resolve {search_term} to a valid ticker symbol."}), 404
+            return jsonify({'error': f"Could not resolve {search_term} to a valid ticker symbol or company name."}), 404
 
         # Fetch stock data using yfinance
         stock = yf.Ticker(ticker)
@@ -57,7 +61,7 @@ def get_stock_data():
         # Fetch stock data for the specified period and interval
         logging.debug(f"Fetching data for {ticker} with period={period} and interval={interval}")
         data = stock.history(period=period, interval=interval)
-        
+
         if data.empty:
             logging.error(f"No data returned for {ticker} with period {period} and interval {interval}")
             return jsonify({'error': f'No data found for {ticker}. The symbol may be delisted or incorrect.'}), 404
