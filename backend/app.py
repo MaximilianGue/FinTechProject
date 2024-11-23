@@ -3,10 +3,17 @@ from flask import Flask, jsonify, request
 import logging
 from flask_cors import CORS
 
+# Manual dictionary mapping company names to ticker symbols
+company_to_ticker = {
+    "Apple": "AAPL",
+    "Google": "GOOGL",
+    "Microsoft": "MSFT",
+    "Tesla": "TSLA",
+    # Add more company-to-ticker mappings here
+}
+
 # Initialize the Flask app
 app = Flask(__name__)
-
-# Enable CORS for all routes
 CORS(app)
 
 # Configure logging
@@ -21,8 +28,18 @@ def get_stock_data():
         return jsonify({'error': 'No search term provided'}), 400
 
     try:
+        # Check if search_term is a ticker or a company name
+        ticker = search_term
+
+        if not ticker.isupper() or len(ticker) < 3:  # If it's not a valid ticker symbol
+            # Try to fetch the ticker symbol from the manual mapping
+            ticker = company_to_ticker.get(search_term)
+
+        if not ticker:
+            return jsonify({'error': f"Could not resolve {search_term} to a valid ticker symbol."}), 404
+
         # Fetch stock data using yfinance
-        stock = yf.Ticker(search_term)
+        stock = yf.Ticker(ticker)
 
         # Adjust interval based on period
         if period == '1d':
@@ -38,21 +55,16 @@ def get_stock_data():
             interval = '1d'  # Default to 1 day if no valid period
 
         # Fetch stock data for the specified period and interval
-        logging.debug(f"Fetching data for {search_term} with period={period} and interval={interval}")
+        logging.debug(f"Fetching data for {ticker} with period={period} and interval={interval}")
         data = stock.history(period=period, interval=interval)
         
         if data.empty:
-            logging.error(f"No data returned for {search_term} with period {period} and interval {interval}")
-            return jsonify({'error': f'No data found for {search_term}. The symbol may be delisted or incorrect.'}), 404
+            logging.error(f"No data returned for {ticker} with period {period} and interval {interval}")
+            return jsonify({'error': f'No data found for {ticker}. The symbol may be delisted or incorrect.'}), 404
 
         # Handle '1wk' period by fetching 7 days worth of hourly data (168 data points)
         if period == '1wk' and interval == '1h':
             logging.debug("Fetching 7 days of hourly data for the 1wk period")
-            data = data.tail(7 * 24)  # 7 days of hourly data points (168 data points)
-
-        # If period is '7d', we fetch hourly data, ensuring we only have the last 7 days
-        if period == '7d' and interval == '1h':
-            logging.debug("Fetching 7 days of hourly data for the 7d period")
             data = data.tail(7 * 24)  # 7 days of hourly data points (168 data points)
 
         # Prepare stock data for the chart
@@ -73,7 +85,7 @@ def get_stock_data():
         }
 
         stock_data = {
-            'symbol': search_term,
+            'symbol': ticker,
             'prices': [round(price, 3) for price in data['Close'].tolist()],  # Round the close prices
             'dates': labels,  # Use the formatted labels
             'volume': data['Volume'].tolist(),
@@ -91,6 +103,3 @@ def get_stock_data():
 # Start the Flask app
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-#ERROR:yfinance:$GOOGL: possibly delisted; no price data found  (period=5d) (Yahoo error = "Invalid input - interval=10m is not supported. Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]")
