@@ -1,109 +1,108 @@
-import React, { useState, useEffect } from 'react';
-import { Pie, Line } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js';
+import React from 'react';
 import './Dashboard.css';
+import { Line } from 'react-chartjs-2'; // Import Line chart from react-chartjs-2
+import { Pie } from 'react-chartjs-2'; // Import Pie chart from react-chartjs-2
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 
-
-// Register chart elements
-ChartJS.register(ArcElement, CategoryScale, LinearScale, PointElement, LineElement);
+// Register chart components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+);
 
 function Dashboard() {
-  // Sample Portfolio Data (you can replace this with dynamic data)
-  const portfolioData = {
-    AAPL: { shares: 50, price: 150 },  // Apple stock
-    GOOGL: { shares: 30, price: 2800 }, // Google stock
-    AMZN: { shares: 10, price: 3400 },  // Amazon stock
-    MSFT: { shares: 20, price: 299 },   // Microsoft stock
-  };
+  // Example stock data
+  const stocks = [
+    { name: 'Apple', shares: 50, price: 175, totalValue: 8750 },
+    { name: 'Tesla', shares: 30, price: 250, totalValue: 7500 },
+    { name: 'Amazon', shares: 10, price: 3000, totalValue: 30000 },
+    { name: 'Google', shares: 20, price: 2800, totalValue: 56000 },
+  ];
 
-  // Calculate the portfolio allocation data
-  const totalValue = Object.values(portfolioData).reduce(
-    (acc, stock) => acc + stock.shares * stock.price,
-    0
-  );
-
-  const allocation = Object.keys(portfolioData).map((stock) => ({
-    label: stock,
-    value: (portfolioData[stock].shares * portfolioData[stock].price / totalValue) * 100,
-  }));
-
-  // Chart.js data for Pie chart
-  const pieData = {
-    labels: allocation.map((item) => item.label),
+  // Example performance chart data
+  const performanceData = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     datasets: [
       {
-        data: allocation.map((item) => item.value),
-        backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FF33A1'], // Custom colors for each segment
-        borderColor: '#fff',
+        label: 'Portfolio Value',
+        data: [10000, 12000, 13000, 15000, 16000, 17000],
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        fill: true,
+        tension: 0.4,
+      },
+    ],
+  };
+
+  // Example portfolio allocation data
+  const allocationData = {
+    labels: ['Apple', 'Tesla', 'Amazon', 'Google'],
+    datasets: [
+      {
+        label: 'Portfolio Allocation',
+        data: [20, 10, 30, 40],
+        backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)', 'rgba(75, 192, 192, 0.6)'],
+        borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)'],
         borderWidth: 1,
       },
     ],
   };
 
-  // Sample Portfolio Performance Data (e.g., over 5 days)
-  const performanceData = {
-    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'],
-    datasets: [
-      {
-        label: 'Portfolio Value ($)',
-        data: [100, 105, 110, 115, 120], // Example data showing portfolio growth
-        fill: false,
-        borderColor: '#4caf50',
-        tension: 0.1,
-      },
-    ],
-  };
-
-  // Table Data for Stock List
-  const stockListData = Object.keys(portfolioData).map((stock) => {
-    const { shares, price } = portfolioData[stock];
-    return {
-      symbol: stock,
-      sharesOwned: shares,
-      price,
-      totalValue: shares * price,
-    };
-  });
-
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Portfolio Dashboard</h1>
+    <div className="dashboard-container">
+      <h1>Dashboard</h1>
+      <div className="personal-info-container">
+        <h2>Personal Information</h2>
+        <div className="dashboard-content-top">
+          {/* Performance chart */}
+          <div className="chart-container">
+            <h3>Performance Chart</h3>
+            <div className="line-chart">
+              <Line data={performanceData} />
+            </div>
+          </div>
 
-      {/* Portfolio Allocation (Pie Chart) */}
-      <div style={{ width: '40%', marginBottom: '30px' }}>
-        <h3>Portfolio Allocation</h3>
-        <Pie data={pieData} />
-      </div>
+          {/* Stock List */}
+          <div className="table-container">
+            <h3 className="stock-list-title">Your Stocks</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Stock</th>
+                  <th>Shares</th>
+                  <th>Price</th>
+                  <th>Total Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stocks.map((stock, index) => (
+                  <tr key={index}>
+                    <td>{stock.name}</td>
+                    <td>{stock.shares}</td>
+                    <td>${stock.price}</td>
+                    <td>${stock.totalValue}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-      {/* Portfolio Performance (Line Chart) */}
-      <div style={{ width: '60%', marginBottom: '30px' }}>
-        <h3>Portfolio Performance Over Time</h3>
-        <Line data={performanceData} />
-      </div>
-
-      {/* List of Stocks in Portfolio */}
-      <div>
-        <h3>List of Stocks in Portfolio</h3>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              <th>Stock Symbol</th>
-              <th>Shares Owned</th>
-              <th>Price ($)</th>
-              <th>Total Value ($)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stockListData.map((stock, index) => (
-              <tr key={index}>
-                <td>{stock.symbol}</td>
-                <td>{stock.sharesOwned}</td>
-                <td>{stock.price}</td>
-                <td>{stock.totalValue}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {/* Portfolio Allocation Chart */}
+        <div className="dashboard-content-bottom">
+          <div className="chart-container">
+            <h3>Portfolio Allocation</h3>
+            <div className="pie-chart">
+              <Pie data={allocationData} />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
