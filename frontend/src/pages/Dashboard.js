@@ -2,10 +2,8 @@ import React from 'react';
 import './Dashboard.css';
 import { Line } from 'react-chartjs-2'; // Import Line chart from react-chartjs-2
 import { Pie } from 'react-chartjs-2'; // Import Pie chart from react-chartjs-2
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
-
-// Register chart components
-ChartJS.register(
+import {
+  Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -13,8 +11,11 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement
-);
+  ArcElement,
+} from 'chart.js';
+
+// Register chart components
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement);
 
 function Dashboard() {
   // Example stock data
@@ -47,8 +48,18 @@ function Dashboard() {
       {
         label: 'Portfolio Allocation',
         data: [20, 10, 30, 40],
-        backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)', 'rgba(75, 192, 192, 0.6)'],
-        borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)'],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.6)',
+          'rgba(54, 162, 235, 0.6)',
+          'rgba(255, 206, 86, 0.6)',
+          'rgba(75, 192, 192, 0.6)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+        ],
         borderWidth: 1,
       },
     ],
@@ -101,6 +112,34 @@ function Dashboard() {
             <div className="pie-chart">
               <Pie data={allocationData} />
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* General Information Section */}
+      <div className="general-info-container">
+        <h2>General Information</h2>
+        <div className="general-info-content">
+          {/* Left: Index or Placeholder */}
+          <div className="info-box">
+            <h3>Fear & Greed Index</h3>
+            <p>Placeholder for Fear & Greed Index.</p>
+          </div>
+
+          {/* Right: News Section */}
+          <div className="info-box">
+            <h3>Latest News</h3>
+            <ul>
+              <li>
+                <strong>Market Update:</strong> Stocks rally as tech continues to lead gains.
+              </li>
+              <li>
+                <strong>Economic News:</strong> Federal Reserve announces new interest rate policy.
+              </li>
+              <li>
+                <strong>Crypto Trends:</strong> Bitcoin surges past $60,000 amid renewed interest.
+              </li>
+            </ul>
           </div>
         </div>
       </div>

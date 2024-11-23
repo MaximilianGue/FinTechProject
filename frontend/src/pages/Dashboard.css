@@ -54,7 +54,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /* Add this to make sure both containers have equal height */
     height: 100%;
   }
   
@@ -90,7 +89,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100%; /* Ensures equal height to chart containers */
+    height: 100%;
   }
   
   /* Table styling */
@@ -138,6 +137,40 @@
     gap: 30px;
   }
   
+  /* News section container */
+  .news-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    gap: 30px;
+  }
+  
+  /* Fear & Greed Index (left) */
+  .fear-greed-index {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Placeholder for news section */
+  .news-placeholder {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    flex: 2;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
   /* Responsive Design */
   @media (max-width: 768px) {
     .dashboard-container {
@@ -164,5 +197,59 @@
     table {
       font-size: 0.9rem;
     }
-  }
   
+    .news-container {
+      flex-direction: column;
+    }
+  
+    .fear-greed-index, .news-placeholder {
+      height: auto;
+    }
+  }
+    /* General Information Section */
+    .general-info-container {
+        margin-top: 40px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .general-info-container h2 {
+        font-size: 2.4rem;
+        margin-bottom: 20px;
+        color: #333;
+        text-align: center;
+    }
+    
+    .general-info-content {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap; /* Stacks the items vertically on smaller screens */
+    }
+    
+    .info-box {
+        flex: 1;
+        min-width: 300px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .info-box h3 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        color: #444;
+    }
+    
+    .info-box p,
+    .info-box ul {
+        font-size: 1.2rem;
+        color: #666;
+    }
+    
+    .info-box ul li {
+        margin-bottom: 10px;
+    }
+        
